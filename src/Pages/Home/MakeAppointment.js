@@ -3,7 +3,7 @@ import doctor from '../../assets/images/doctor.png';
 import appointment from '../../assets/images/appointment.png';
 import PrimaryBtn from './PrimaryBtn';
 
-const Appointment = () => {
+const MakeAppointment = () => {
     return (
         <section style={{
             background: `url(${appointment})`
@@ -12,7 +12,7 @@ const Appointment = () => {
             <div className='flex-1 hidden lg:block'>
                 <img className='mt-[-100px]' src={doctor} alt="" />
             </div>
-            <div className='flex-1 pr-24'>
+            <div className='flex-1 pr-12 my-12'>
                 <h3 className='text-xl text-secondary font-bold py-5'>Appointment</h3>
                 <h2 className='text-3xl text-white'>Make an Appointment Today</h2>
                 
@@ -23,4 +23,4 @@ const Appointment = () => {
     );
 };
 
-export default Appointment;
+export default MakeAppointment;
