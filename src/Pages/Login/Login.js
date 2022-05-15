@@ -1,20 +1,41 @@
 import React from 'react';
-import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSignInWithGoogle, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
+import Loading from '../Shared/Loading';
 
 
 const Login = () => {
-    const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+    const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
 
-    if (user) {
-        console.log(user);
+    const [
+        signInWithEmailAndPassword,
+        user,
+        loading,
+        error,
+    ] = useSignInWithEmailAndPassword(auth);
+    let signInError;
+
+    if( loading || gLoading){
+        return <Loading />
+    }
+
+    if(error || gError){
+        signInError=<p className='text-red-600 text-center text-sm'>{error?.message || gError?.message}</p>
+    }
+    
+
+    if (gUser) {
+        console.log(gUser);
     }
 
     const onSubmit = data => {
         console.log(data);
+        signInWithEmailAndPassword(data.email, data.password)
+
+        
     }
 
     return (
@@ -52,31 +73,31 @@ const Login = () => {
                                 </label>
                             </div>
                             <div className="form-control w-full max-w-xs">
-                            <label className="label">
-                                <span className="label-text">Password</span>
-                            </label>
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                className="input input-bordered input-secondary w-full max-w-xs"
-                                {...register("password", {
-                                    required: {
-                                        value: true,
-                                        message: 'Password is Required'
-                                    },
-                                    minLength: {
-                                        value: 6,
-                                        message: 'Must be 6 characters or longer'
-                                    }
-                                })}
-                            />
-                            <label className="label">
-                                {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
-                                {errors.password?.type === 'minLength' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
-                            </label>
-                        </div>
-
-                            <input className='w-full max-w-xs btn bg-gradient-to-r from-secondary to-primary border-0 text-white' type="submit" />
+                                <label className="label">
+                                    <span className="label-text">Password</span>
+                                </label>
+                                <input
+                                    type="password"
+                                    placeholder="Password"
+                                    className="input input-bordered input-secondary w-full max-w-xs"
+                                    {...register("password", {
+                                        required: {
+                                            value: true,
+                                            message: 'Password is Required'
+                                        },
+                                        minLength: {
+                                            value: 6,
+                                            message: 'Must be 6 characters or longer'
+                                        }
+                                    })}
+                                />
+                                <label className="label">
+                                    {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
+                                    {errors.password?.type === 'minLength' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
+                                </label>
+                            </div>
+                             {signInError}
+                            <input className='w-full max-w-xs btn btn-secondary border-0 text-white' type="submit" value="Login" />
                         </form>
 
                         <div className="divider">OR</div>
