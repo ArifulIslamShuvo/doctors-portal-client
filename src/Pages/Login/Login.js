@@ -1,17 +1,24 @@
-import React, { useEffect } from 'react';
-import { useSignInWithGoogle, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import React, { useEffect, useState } from 'react';
+import { useSignInWithGoogle, useSignInWithEmailAndPassword, useSendPasswordResetEmail } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import Loading from '../Shared/Loading';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const Login = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const navigate = useNavigate()
 
+    // ---------Reset-password---------//
+    const [email, setEmail] = useState('');
+    const [sendPasswordResetEmail, resetError] = useSendPasswordResetEmail(auth);
+   
+
+
+    //-------------signInWithEmailAndPassword-------------------/
     const [
         signInWithEmailAndPassword,
         user,
@@ -20,7 +27,7 @@ const Login = () => {
     ] = useSignInWithEmailAndPassword(auth);
 
     let signInError;
-
+    const navigate = useNavigate()
     let location = useLocation();
     let from = location.state?.from?.pathname || "/";
 
@@ -37,7 +44,7 @@ const Login = () => {
         return <Loading />
     }
 
-    if (error || gError) {
+    if (error || gError || resetError) {
         signInError = <p className='text-red-600 text-center text-sm'>{error?.message || gError?.message}</p>
     }
 
@@ -75,6 +82,7 @@ const Login = () => {
                                             message: 'Provide a valid Email'
                                         }
                                     })}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                                 <label className="label">
                                     {errors.email?.type === 'required' && <span className="label-text-alt text-red-500">{errors.email.message}</span>}
@@ -100,6 +108,12 @@ const Login = () => {
                                         }
                                     })}
                                 />
+                                
+                                <p className='text-sm text-secondary cursor-pointer' onClick={async () => {
+                                    await sendPasswordResetEmail(email);
+                                    toast('Send Email');
+                                }}>Forgot Password ?</p>
+
                                 <label className="label">
                                     {errors.password?.type === 'required' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}
                                     {errors.password?.type === 'minLength' && <span className="label-text-alt text-red-500">{errors.password.message}</span>}

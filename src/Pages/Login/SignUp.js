@@ -1,14 +1,18 @@
 import React from 'react';
-import { useSignInWithGoogle, useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
+import { useSignInWithGoogle, useCreateUserWithEmailAndPassword, useUpdateProfile, useSendEmailVerification } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import Loading from '../Shared/Loading';
 import { Link, useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const SignUp = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
+    const [sendEmailVerification, sending, sendEmailError] = useSendEmailVerification(auth);
 
     const [
         createUserWithEmailAndPassword,
@@ -26,7 +30,7 @@ const SignUp = () => {
         return <Loading />
     }
 
-    if(error || gError || updateError){
+    if(error || gError || updateError || updateError){
         signUpError=<p className='text-red-600 text-center text-sm'>{error?.message || gError?.message || updateError?.message}</p>
     }
     
@@ -38,6 +42,8 @@ const SignUp = () => {
     const onSubmit = async data => {
         await createUserWithEmailAndPassword(data.email, data.password)
         await updateProfile({ displayName: data.name });
+        await sendEmailVerification();
+        toast("Send Email.. ");
         navigate('/appointment');
 
         
