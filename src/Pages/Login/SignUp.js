@@ -18,7 +18,7 @@ const SignUp = () => {
       ] = useCreateUserWithEmailAndPassword(auth);
       const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
-      const naviget = useNavigate()
+  const navigate = useNavigate()
 
     let signUpError;
 
@@ -38,7 +38,7 @@ const SignUp = () => {
     const onSubmit = async data => {
         await createUserWithEmailAndPassword(data.email, data.password)
         await updateProfile({ displayName: data.name });
-        naviget('/appointment');
+        navigate('/appointment');
 
         
     }

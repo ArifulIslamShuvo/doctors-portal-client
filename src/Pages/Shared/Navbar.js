@@ -6,11 +6,11 @@ import auth from '../../firebase.init';
 
 const Navbar = () => {
     const [user, loading, error] = useAuthState(auth);
-    const naviget =useNavigate();
+const navigate =useNavigate();
 
     const logout = () => {
         signOut(auth);
-        naviget('/')
+        navigate('/')
     };
 
     const menuItems = <>
