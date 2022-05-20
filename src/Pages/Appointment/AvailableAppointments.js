@@ -44,3 +44,4 @@ const AvailableAppointments = ({ date }) => {
 };
 
 export default AvailableAppointments;
+

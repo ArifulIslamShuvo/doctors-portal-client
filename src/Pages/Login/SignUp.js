@@ -7,6 +7,7 @@ import Loading from '../Shared/Loading';
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import useToken from '../../hooks/useToken';
 
 
 const SignUp = () => {
@@ -22,6 +23,8 @@ const SignUp = () => {
       ] = useCreateUserWithEmailAndPassword(auth);
       const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
+      const [token] = useToken(user || gUser)
+
   const navigate = useNavigate()
 
     let signUpError;
@@ -33,10 +36,9 @@ const SignUp = () => {
     if(error || gError || updateError || updateError){
         signUpError=<p className='text-red-600 text-center text-sm'>{error?.message || gError?.message || updateError?.message}</p>
     }
-    
 
-    if (user || gUser) {
-        console.log(user || gUser);
+    if (token) {
+        navigate('/appointment');
     }
 
     const onSubmit = async data => {
@@ -44,7 +46,7 @@ const SignUp = () => {
         await updateProfile({ displayName: data.name });
         await sendEmailVerification();
         toast("Send Email.. ");
-        navigate('/appointment');
+        
 
         
     }
