@@ -6,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import Loading from '../Shared/Loading';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import useToken from '../../hooks/useToken';
 
 
 const Login = () => {
@@ -25,6 +26,7 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
+    const [token] = useToken(user || gUser)
 
     let signInError;
     const navigate = useNavigate()
@@ -33,11 +35,10 @@ const Login = () => {
 
     useEffect(() => {
 
-        if (user || gUser) {
-            console.log(user || gUser);
+        if (token) {
             navigate(from, { replace: true });
         }
-    }, [user, gUser, from, navigate])
+    }, [token, from, navigate]);
 
 
     if (loading || gLoading) {

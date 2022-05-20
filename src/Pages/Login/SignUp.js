@@ -37,8 +37,10 @@ const SignUp = () => {
         signUpError=<p className='text-red-600 text-center text-sm'>{error?.message || gError?.message || updateError?.message}</p>
     }
 
+
     if (token) {
         navigate('/appointment');
+        
     }
 
     const onSubmit = async data => {
