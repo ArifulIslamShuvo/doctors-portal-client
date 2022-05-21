@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-const UseAdmin = user => {
+const useAdmin = user => {
    const [admin, setadmin] = useState(false);
+   const [adminLoadig, setAdminLoading] = useState(true);
    useEffect(() => {
        const email = user?.email;
        if(email){
@@ -17,10 +18,11 @@ const UseAdmin = user => {
             console.log('data inside useToken', data);
            
             setadmin(data.admin);
+            setAdminLoading(false);
         })
        }
    },[user]);
-   return [admin];
+   return [admin, adminLoadig];
 };
 
-export default UseAdmin;
+export default useAdmin;
